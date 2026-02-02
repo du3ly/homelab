@@ -1,4 +1,10 @@
-source "proxmox" "debian_bullseye" {
+locals {
+  debian_version = "12.13.0"
+  debian_iso_checksum = "2b880ffabe36dbe04a662a3125e5ecae4db69d0acce257dd74615bbf165ad76e"
+  vm_id = 201
+}
+
+source "proxmox-iso" "debian" {
   boot_command = [
     "<wait><wait><wait><esc><wait><wait><wait>",
     "/install.amd/vmlinuz ",
@@ -16,12 +22,16 @@ source "proxmox" "debian_bullseye" {
   disks {
     disk_size         = "32G"
     storage_pool      = "vmstore"
-    storage_pool_type = "lvm"
     type              = "scsi"
   }
   http_content             = { "/${var.preseed_file}" = templatefile(var.preseed_file, { var = var }) }
   insecure_skip_tls_verify = true
-  iso_file                 = "local:iso/debian-11.6.0-amd64-netinst.iso"
+  boot_iso {
+    iso_url                  = "https://cdimage.debian.org/cdimage/archive/${local.debian_version}/amd64/iso-cd/debian-${local.debian_version}-amd64-netinst.iso"
+    iso_storage_pool         = "local"
+    iso_checksum             = "${local.debian_iso_checksum}"
+    unmount                  = true
+  }
   network_adapters {
     bridge = "vmbr0"
     model  = "virtio"
@@ -32,16 +42,15 @@ source "proxmox" "debian_bullseye" {
   ssh_password         = "${var.ssh_password}"
   ssh_timeout          = "15m"
   ssh_username         = "${var.ssh_username}"
-  template_description = "Debian Bullseye, generated on ${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
-  template_name        = "debian-bullseye"
+  template_description = "Debian ${local.debian_version}, generated on ${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
+  template_name        = "debian-${local.debian_version}"
   token                = "${var.proxmox_token}"
-  unmount_iso          = true
   username             = "${var.proxmox_user}"
-  vm_id                = 200
+  vm_id                = "${local.vm_id}"
 }
 
 build {
-  sources = ["source.proxmox.debian_bullseye"]
+  sources = ["source.proxmox-iso.debian"]
 
   provisioner "file" {
       destination = "/tmp/requirements.txt"
@@ -56,13 +65,14 @@ build {
   }
 
   provisioner "ansible-local" {
-    command = "ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 ansible-playbook"
-    extra_arguments= [
-      "-e 'ansible_python_interpreter=/usr/bin/python3'"
+    command = "source /tmp/ansible-venv/bin/activate && ANSIBLE_FORCE_COLOR=1 PYTHONBUFFERED=1 ansible-playbook"
+    extra_arguments = [
+      "-e", "ansible_python_interpreter=/usr/bin/python3",
+      "-t", "operators"
     ]
     inventory_groups = ["all"]
-    playbook_dir = "../ansible"
-    playbook_file = "../ansible/playbooks/operators.yml"
+    playbook_dir  = "../ansible"
+    playbook_file = "../ansible/playbooks/base.yml"
   }
 
   provisioner "shell" {
@@ -71,5 +81,18 @@ build {
     scripts = [
       "scripts/cleanup.sh"
     ]
+  }
+}
+
+packer {
+  required_plugins {
+    ansible = {
+      version = "~> 1"
+      source = "github.com/hashicorp/ansible"
+    }
+    name = {
+      version = "~> 1"
+      source  = "github.com/hashicorp/proxmox"
+    }
   }
 }

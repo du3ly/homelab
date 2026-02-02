@@ -5,4 +5,4 @@
     - apt
     - dns
     - motd
-    - operators
+    - {role: operators, tags: operators}
