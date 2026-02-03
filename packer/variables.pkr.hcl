@@ -1,5 +1,6 @@
 variable "proxmox_token" {
   type    = string
+  sensitive = true
   default = "${env("PROXMOX_TOKEN")}"
 }
 
@@ -10,7 +11,7 @@ variable "proxmox_user" {
 
 variable "preseed_file" {
   type    = string
-  default = "http/debian-bullseye.preseed"
+  default = "http/debian.preseed"
 }
 
 variable "ssh_username" {
@@ -20,5 +21,6 @@ variable "ssh_username" {
 
 variable "ssh_password" {
   type    = string
+  sensitive = true
   default = "${env("SSH_PASSWORD")}"
 }
