@@ -1,19 +1,19 @@
 output "id" {
   description = "The resource ID returned by the provider"
-  value       = proxmox_vm_qemu.this.id
+  value       = module.instance.id
 }
 
 output "vmid" {
   description = "The VMID assigned to the virtual machine by Proxmox"
-  value       = proxmox_vm_qemu.this.vmid
+  value       = module.instance.vmid
 }
 
 output "name" {
   description = "The name of the virtual machine"
-  value       = proxmox_vm_qemu.this.name
+  value       = module.instance.name
 }
 
 output "node" {
   description = "The Proxmox node on which the VM was created"
-  value       = var.target_node
+  value       = module.instance.node
 }

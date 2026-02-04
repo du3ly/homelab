@@ -2,21 +2,32 @@ resource "proxmox_vm_qemu" "this" {
   name        = var.vm_name
   target_node = var.target_node
   clone       = var.vm_clone_template
-  desc        = var.vm_desc
+  description = var.vm_desc
+  skip_ipv6   = true
 
   # Resources
   memory = var.memory
-  cores  = var.cores
+
+  cpu {
+    cores = var.cores
+  }
 
   network {
+    id     = 0
     model  = "virtio"
     bridge = "vmbr0"
   }
 
-  disk {
-    type    = "scsi"
-    storage = var.disk_storage
-    size    = var.disk_size
+  disks {
+    scsi {
+      scsi0 {
+        disk {
+          backup  = false
+          size    = var.disk_size
+          storage = var.disk_storage
+        }
+      }
+    }
   }
 
   # Enable QEMU Guest Agent
