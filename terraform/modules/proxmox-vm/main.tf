@@ -4,6 +4,7 @@ resource "proxmox_vm_qemu" "this" {
   clone       = var.vm_clone_template
   description = var.vm_desc
   skip_ipv6   = true
+  full_clone  = var.full_clone
 
   # Resources
   memory = var.memory
@@ -22,7 +23,7 @@ resource "proxmox_vm_qemu" "this" {
     scsi {
       scsi0 {
         disk {
-          backup  = false
+          backup  = var.disk_backup
           size    = var.disk_size
           storage = var.disk_storage
         }

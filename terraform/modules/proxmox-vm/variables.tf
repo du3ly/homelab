@@ -45,3 +45,13 @@ variable "vm_clone_template" {
   type    = string
   default = ""
 }
+
+variable "full_clone" {
+  type    = string
+  default = true
+}
+
+variable "disk_backup" {
+  type    = bool
+  default = true
+}
