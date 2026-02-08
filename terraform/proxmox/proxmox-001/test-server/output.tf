@@ -1,19 +1,19 @@
-output "id" {
-  description = "The resource ID returned by the provider"
-  value       = module.instance.id
+output "vm_id" {
+  description = "The ID of the created virtual machine"
+  value       = module.instance.vm_id
 }
 
-output "vmid" {
-  description = "The VMID assigned to the virtual machine by Proxmox"
-  value       = module.instance.vmid
+output "vm_name" {
+  description = "The name of the created virtual machine"
+  value       = module.instance.vm_name
 }
 
-output "name" {
-  description = "The name of the virtual machine"
-  value       = module.instance.name
+output "vm_memory" {
+  description = "The amount of memory allocated to the virtual machine"
+  value       = module.instance.memory
 }
 
-output "node" {
-  description = "The Proxmox node on which the VM was created"
-  value       = module.instance.node
+output "vm_cpu_cores" {
+  description = "The number of CPU cores allocated to the virtual machine"
+  value       = module.instance.cpu_cores
 }

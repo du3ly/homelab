@@ -3,14 +3,14 @@ variable "cores" {
   default = 1
 }
 
-variable "disk_size" {
-  type    = string
-  default = "32G"
+variable "disk_size_gb" {
+  type    = number
+  default = 32
 }
 
 variable "disk_storage" {
   type        = string
-  description = "The name of the storage pool on which to store the disk"
+  description = "The ID of the storage pool on which to store the disk"
   default     = "vmstore"
 }
 
@@ -41,14 +41,14 @@ variable "vm_name" {
   default = ""
 }
 
-variable "vm_clone_template" {
-  type    = string
-  default = ""
+variable "vm_id" {
+  type    = number
 }
 
-variable "full_clone" {
-  type    = string
-  default = true
+variable "clone_vm_id" {
+  type        = number
+  description = "VMID of the template to clone from"
+  default     = 0
 }
 
 variable "disk_backup" {

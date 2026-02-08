@@ -1,36 +1,36 @@
-resource "proxmox_vm_qemu" "this" {
+resource "proxmox_virtual_environment_vm" "this" {
+  vm_id       = var.vm_id
   name        = var.vm_name
-  target_node = var.target_node
-  clone       = var.vm_clone_template
+  node_name   = var.target_node
   description = var.vm_desc
-  skip_ipv6   = true
-  full_clone  = var.full_clone
+
+  # Clone from template
+  clone {
+    vm_id = var.clone_vm_id
+  }
 
   # Resources
-  memory = var.memory
+  memory {
+    dedicated = var.memory
+  }
 
   cpu {
     cores = var.cores
   }
 
-  network {
-    id     = 0
-    model  = "virtio"
+  network_device {
     bridge = "vmbr0"
   }
 
-  disks {
-    scsi {
-      scsi0 {
-        disk {
-          backup  = var.disk_backup
-          size    = var.disk_size
-          storage = var.disk_storage
-        }
-      }
-    }
+  disk {
+    datastore_id = var.disk_storage
+    interface    = "scsi1"
+    size         = var.disk_size_gb
+    backup       = var.disk_backup
   }
 
   # Enable QEMU Guest Agent
-  agent = 1
+  agent {
+    enabled = true
+  }
 }
