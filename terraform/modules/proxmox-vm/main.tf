@@ -4,9 +4,13 @@ resource "proxmox_virtual_environment_vm" "this" {
   node_name   = var.target_node
   description = var.vm_desc
 
-  # Clone from template
-  clone {
-    vm_id = var.clone_vm_id
+  # Optional clone block
+  dynamic "clone" {
+    for_each = var.vm_clone_template != null && var.vm_clone_template != 0 ? [1] : []
+    content {
+      vm_id = var.vm_clone_template
+      full  = var.full_clone
+    }
   }
 
   # Resources
@@ -24,7 +28,7 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   disk {
     datastore_id = var.disk_storage
-    interface    = "scsi1"
+    interface    = "scsi0"
     size         = var.disk_size_gb
     backup       = var.disk_backup
   }

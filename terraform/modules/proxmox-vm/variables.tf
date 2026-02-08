@@ -45,13 +45,19 @@ variable "vm_id" {
   type    = number
 }
 
-variable "clone_vm_id" {
-  type        = number
-  description = "VMID of the template to clone from"
-  default     = 0
-}
-
 variable "disk_backup" {
   type    = bool
   default = true
+}
+
+variable "vm_clone_template" {
+  type        = number
+  description = "VM ID of template to clone from. Set to null or 0 to skip cloning."
+  default     = null
+}
+
+variable "full_clone" {
+  type        = bool
+  description = "Whether to create a full clone (true) or linked clone (false)"
+  default     = true
 }

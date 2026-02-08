@@ -8,6 +8,11 @@ output "vm_name" {
   value       = module.instance.vm_name
 }
 
+output "vm_ipv4_address" {
+  description = "The IPv4 address of the virtual machine"
+  value       = module.instance.ipv4
+}
+
 output "vm_memory" {
   description = "The amount of memory allocated to the virtual machine"
   value       = module.instance.memory

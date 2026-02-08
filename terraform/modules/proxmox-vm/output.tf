@@ -8,6 +8,10 @@ output "vm_id" {
   value       = proxmox_virtual_environment_vm.this.vm_id
 }
 
+output "ipv4" {
+  value = proxmox_virtual_environment_vm.this.ipv4_addresses[1]
+}
+
 output "memory" {
   description = "The amount of memory allocated to the virtual machine"
   value       = proxmox_virtual_environment_vm.this.memory[0].dedicated
