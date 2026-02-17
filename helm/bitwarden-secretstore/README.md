@@ -13,7 +13,7 @@ helm upgrade sm-operator bitwarden/sm-operator -i --debug -n bitwarden --create-
 1. From Bitwarden Secrets Manager, you will need to create a "machine account"
 2. Run the below command with the "machine account" token
 ```
-kubectl create secret generic bw-auth-token -n bitwarden --from-literal=token="<TOKEN_HERE>"
+kubectl create secret generic bw-auth-token -n bitwarden --from-literal=token="${BW_TOKEN}"
 ```
 
 ## Deploy BitwardenSecret
