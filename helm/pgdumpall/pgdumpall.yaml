@@ -17,6 +17,11 @@ spec:
                 secretKeyRef:
                   name: bitwarden
                   key: db-001_password
+            - name: DISCORD_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: bitwarden
+                  key: discord_webhook_url
             volumeMounts:
             - name: backup-nas
               mountPath: /backups
@@ -25,7 +30,13 @@ spec:
             - -c
             - |
               set -e
-              pg_dumpall -h 192.168.1.167 -U postgres | gzip > /backups/db-$(date +%F-%H%M).sql.gz
+              trap 'curl -s -X POST -H "Content-type: application/json" --data "{\"content\":\"❌ PostgreSQL backup FAILED\"}" "$DISCORD_WEBHOOK_URL"; exit 1' ERR
+              BACKUP_FILE="/backups/db-$(date +%F-%H%M).sql.gz"
+              pg_dumpall -h 192.168.1.167 -U postgres | gzip > "$BACKUP_FILE"
+              FILE_SIZE=$(ls -lh "$BACKUP_FILE" | awk '{print $5}')
+              curl -s -X POST -H 'Content-type: application/json' \
+                --data "{\"content\":\"✅ PostgreSQL backup completed successfully\\nFile: $BACKUP_FILE\\nSize: $FILE_SIZE\"}" \
+                "$DISCORD_WEBHOOK_URL"
           restartPolicy: OnFailure
           volumes:
           - name: backup-nas
