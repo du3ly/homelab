@@ -17,6 +17,11 @@ spec:
                 secretKeyRef:
                   name: bitwarden
                   key: db-001_password
+            - name: DISCORD_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: bitwarden
+                  key: discord_webhook_url
             volumeMounts:
             - name: backup-nas
               mountPath: /backups
