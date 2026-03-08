@@ -1,0 +1,6 @@
+---
+- name: Bootstrap Flux CD
+  hosts: k3s
+  become: true
+  roles:
+    - flux
