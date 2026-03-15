@@ -1,6 +1,0 @@
----
-# GitHub configuration
-flux_github_owner: duelyyung
-flux_github_repository: homelab
-flux_github_branch: main
-flux_github_path: clusters/k3s
