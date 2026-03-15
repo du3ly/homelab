@@ -1,0 +1,21 @@
+[metadata]
+name = "garage-s3"
+description = "Garage S3 cluster"
+
+[api]
+api_host = "0.0.0.0:3900"
+rpc_host = "127.0.0.1:3901"
+region = "homelab"
+zone = "default"
+block_size = 4194304
+
+[replication]
+replica_factor = 1
+
+[storage]
+db_dir = "/mnt/garage-data/db"
+data_dir = "/mnt/garage-data/data"
+
+[s3_api]
+s3_api = "enabled"
+api_port = 3900

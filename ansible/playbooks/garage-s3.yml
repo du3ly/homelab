@@ -1,0 +1,6 @@
+---
+- name: Deploy Garage S3
+  hosts: garage-s3
+  become: yes
+  roles:
+    - garage_s3
