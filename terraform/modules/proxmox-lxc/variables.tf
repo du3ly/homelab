@@ -78,16 +78,3 @@ variable "cloud_init_script" {
   default     = ""
 }
 
-variable "garage_admin_secret" {
-  type        = string
-  description = "Garage admin secret key"
-  default     = ""
-  sensitive   = true
-}
-
-variable "garage_api_secret" {
-  type        = string
-  description = "Garage API secret key"
-  default     = ""
-  sensitive   = true
-}
