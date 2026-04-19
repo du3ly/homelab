@@ -44,14 +44,4 @@ resource "proxmox_lxc" "this" {
     }
   }
 
-  # Pass secrets via environment for cloud-init templating
-  dynamic "environment" {
-    for_each = (var.garage_admin_secret != "" && var.garage_api_secret != "") ? [1] : []
-    content {
-      env = {
-        GARAGE_ADMIN_SECRET = var.garage_admin_secret
-        GARAGE_API_SECRET   = var.garage_api_secret
-      }
-    }
-  }
 }
