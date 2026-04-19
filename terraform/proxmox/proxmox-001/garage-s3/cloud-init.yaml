@@ -1,0 +1,63 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - curl
+  - ca-certificates
+
+write_files:
+  - path: /etc/systemd/system/garage.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=Garage S3 Server
+      After=network.target
+
+      [Service]
+      Type=simple
+      ExecStart=/usr/local/bin/garage server --config /etc/garage/garage.toml
+      Restart=on-failure
+      User=garage
+      Group=garage
+
+      [Install]
+      WantedBy=multi-user.target
+
+  - path: /etc/garage/garage.toml
+    permissions: '0644'
+    content: |
+      # Garage configuration file
+      api_admin_secret = "REPLACE_ADMIN_SECRET"
+      api_secret_key = "REPLACE_API_SECRET"
+
+      s3_api = { enabled = true }
+
+      data_dir = "/var/lib/garage/data"
+
+      replication = { worker_count = 2 }
+
+      region = "homelab"
+      region_name = "Home Lab"
+
+      rpc_bind_addr = "[::]:3936"
+      rpc_public_addr = ":3936"
+
+      s3_bind_addr = "[::]:3900"
+      s3_public_addr = ":3900"
+
+users:
+  - name: garage
+    system: true
+    groups: garage
+
+runcmd:
+  - mkdir -p /etc/garage /var/lib/garage/data
+  - chown -R garage:garage /var/lib/garage
+  - curl -L https://garage.k0kubun.com/latest/garage-x86_64-linux -o /usr/local/bin/garage
+  - chmod +x /usr/local/bin/garage
+  - sed -i "s/REPLACE_ADMIN_SECRET/${GARAGE_ADMIN_SECRET}/" /etc/garage/garage.toml
+  - sed -i "s/REPLACE_API_SECRET/${GARAGE_API_SECRET}/" /etc/garage/garage.toml
+  - systemctl daemon-reload
+  - systemctl enable garage
+  - systemctl start garage
