@@ -5,53 +5,56 @@ resource "local_file" "cloud_init" {
   filename = "${path.module}/.cloud-init-${var.hostname}.yaml"
 }
 
-resource "proxmox_lxc" "this" {
-  target_node = var.target_node
-  hostname    = var.hostname
-  description = var.description
-
-  # Template to clone from
-  template = var.template
-
-  # Resources
-  memory = var.memory
-  swap   = var.swap
-  cores  = var.cores
-
-  # Network configuration
-  network {
-    name   = "eth0"
-    bridge = "vmbr0"
-    ip     = var.ip_address
-    ip6    = "auto"
-  }
-
-  # Root disk
-  rootfs {
-    size     = var.disk_size
-    storage  = var.disk_storage
-  }
-
-  # Features
-  features {
-    mount = "nfs;cifs"
-  }
-
-  # Start on boot
-  onboot = var.onboot
-
-  # Enable nesting for Docker support
+resource "proxmox_virtual_environment_container" "this" {
+  node_name    = var.target_node
+  vm_id        = null
+  description  = var.description
   unprivileged = var.unprivileged
-  nesting      = var.nesting
+  tags         = ["gha-runner"]
 
-  # Cloud-init configuration - references the local file path
-  # The provider will upload this to Proxmox storage
-  dynamic "cicustom" {
-    for_each = var.cloud_init_script != "" ? [1] : []
-    content {
-      user = local_file.cloud_init[0].filename
+  clone {
+    vm_id = var.template_vm_id
+  }
+
+  cpu {
+    cores = var.cores
+  }
+
+  memory {
+    dedicated = var.memory
+    swap      = var.swap
+  }
+
+  disk {
+    datastore_id = var.disk_storage
+    size         = var.disk_size
+  }
+
+  network_interface {
+    name = "eth0"
+    bridge = "vmbr0"
+  }
+
+  initialization {
+    hostname = var.hostname
+
+    ip_config {
+      ipv4 {
+        address = var.ip_address
+      }
     }
   }
 
-  depends_on = [local_file.cloud_init]
+  features {
+    nesting = var.nesting ? true : null
+    mount   = ["nfs", "cifs"]
+  }
+
+  startup {
+    order = var.onboot ? 1 : 0
+  }
+
+  lifecycle {
+    ignore_changes = [initialization[0].user_account]
+  }
 }

@@ -23,16 +23,16 @@ variable "runner_group" {
 }
 
 module "gha_runner" {
-  source = "../../../../modules/proxmox-lxc"
+  source = "../../../modules/proxmox-lxc"
 
   hostname        = "gha-runner-001"
   description     = "GitHub Actions Self-Hosted Runner"
-  template        = "debian-12-standard"
+  template_vm_id  = 100
   target_node     = "proxmox-001"
   memory          = 2048
   swap            = 1024
   cores           = 2
-  disk_size       = "20G"
+  disk_size       = 20
   disk_storage    = "local-lvm"
   ip_address      = "192.168.1.100/24"
   onboot          = true

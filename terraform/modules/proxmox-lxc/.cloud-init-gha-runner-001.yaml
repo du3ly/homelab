@@ -1,0 +1,84 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - curl
+  - ca-certificates
+  - jq
+  - libicu-dev
+
+# Create github user for running the runner
+users:
+  - name: github
+    system: true
+    shell: /bin/bash
+    groups: docker
+
+write_files:
+  # Runner configuration script
+  - path: /opt/actions-runner/config.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      set -e
+
+      cd /opt/actions-runner
+
+      # Configure the runner
+      ./config.sh --unattended \
+        --url "${RUNNER_URL}" \
+        --token "${RUNNER_TOKEN}" \
+        --name "${RUNNER_NAME}" \
+        --labels "self-hosted,linux,proxmox" \
+        --group "${RUNNER_GROUP:-Default}" \
+        --work "_work"
+
+      # Install as service
+      ./svc.sh install github
+      ./svc.sh start
+
+  # GitHub Actions Runner service
+  - path: /etc/systemd/system/actions-runner.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=GitHub Actions Runner
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=github
+      Group=github
+      WorkingDirectory=/opt/actions-runner
+      ExecStart=/opt/actions-runner/run.sh
+      Restart=always
+      RestartSec=10
+
+      [Install]
+      WantedBy=multi-user.target
+
+runcmd:
+  # Create runner directory
+  - mkdir -p /opt/actions-runner
+  - chown github:github /opt/actions-runner
+
+  # Download and extract GitHub Actions Runner
+  - cd /opt/actions-runner
+  - RUNNER_VERSION=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r .tag_name | sed 's/^v//')
+  - curl -L -o runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+  - tar xzf runner.tar.gz
+  - chown -R github:github /opt/actions-runner
+
+  # Run configuration script with environment variables
+  - /opt/actions-runner/config.sh
+
+  # Enable and start service
+  - systemctl daemon-reload
+  - systemctl enable actions-runner
+  - systemctl start actions-runner
+
+power_state:
+  mode: reboot
+  timeout: 60
+  condition: True

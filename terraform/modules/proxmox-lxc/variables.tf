@@ -9,9 +9,9 @@ variable "description" {
   default     = ""
 }
 
-variable "template" {
-  type        = string
-  description = "The CT template to clone (e.g., 'debian-12-standard')"
+variable "template_vm_id" {
+  type        = number
+  description = "The VM ID of the template to clone"
 }
 
 variable "target_node" {
@@ -39,9 +39,9 @@ variable "cores" {
 }
 
 variable "disk_size" {
-  type        = string
-  description = "Size of the root disk"
-  default     = "8G"
+  type        = number
+  description = "Size of the root disk in GB"
+  default     = 8
 }
 
 variable "disk_storage" {
@@ -83,4 +83,3 @@ variable "cloud_init_script" {
   description = "Cloud-init script to run on first boot"
   default     = ""
 }
-
