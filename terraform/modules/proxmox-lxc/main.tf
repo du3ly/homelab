@@ -45,11 +45,6 @@ resource "proxmox_virtual_environment_container" "this" {
     }
   }
 
-  features {
-    nesting = var.nesting ? true : null
-    mount   = ["nfs", "cifs"]
-  }
-
   startup {
     order = var.onboot ? 1 : 0
   }

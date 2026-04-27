@@ -67,12 +67,6 @@ variable "unprivileged" {
   default     = false
 }
 
-variable "nesting" {
-  type        = bool
-  description = "Enable nesting for Docker/container support"
-  default     = false
-}
-
 variable "pm_api_url" {
   type    = string
   default = "192.168.1.20"

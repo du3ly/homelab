@@ -27,7 +27,7 @@ module "gha_runner" {
 
   hostname        = "gha-runner-001"
   description     = "GitHub Actions Self-Hosted Runner"
-  template_vm_id  = 100
+  template_vm_id  = 300
   target_node     = "proxmox-001"
   memory          = 2048
   swap            = 1024
@@ -37,7 +37,6 @@ module "gha_runner" {
   ip_address      = "192.168.1.100/24"
   onboot          = true
   unprivileged    = false
-  nesting         = true
   cloud_init_script = "${path.module}/cloud-init.yaml"
 }
 
