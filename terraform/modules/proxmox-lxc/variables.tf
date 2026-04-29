@@ -1,80 +1,75 @@
-variable "hostname" {
+variable "node_name" {
   type        = string
-  description = "The hostname of the LXC container"
-}
-
-variable "description" {
-  type        = string
-  description = "Description of the container"
-  default     = ""
-}
-
-variable "template" {
-  type        = string
-  description = "The CT template to clone (e.g., 'debian-12-standard')"
-}
-
-variable "target_node" {
-  type        = string
-  description = "The Proxmox node to place the container on"
+  description = "Proxmox node name"
   default     = "proxmox-001"
 }
 
-variable "memory" {
+variable "vm_id" {
   type        = number
-  description = "Amount of memory in MB"
-  default     = 512
+  description = "VM/CT ID for the container"
 }
 
-variable "swap" {
-  type        = number
-  description = "Amount of swap in MB"
-  default     = 512
+variable "hostname" {
+  type        = string
+  description = "Container hostname"
 }
 
-variable "cores" {
+variable "template_datastore" {
+  type        = string
+  description = "Datastore to store the downloaded template"
+  default     = "local"
+}
+
+variable "template_url" {
+  type        = string
+  description = "URL to download the container template from"
+  default     = "http://download.proxmox.com/images/system/debian-13-standard_13.1-2_amd64.tar.zst"
+}
+
+variable "cpu_cores" {
   type        = number
   description = "Number of CPU cores"
-  default     = 1
+  default     = 2
+}
+
+variable "memory_mb" {
+  type        = number
+  description = "Dedicated memory in MB"
+  default     = 2048
+}
+
+variable "disk_datastore" {
+  type        = string
+  description = "Datastore for container disk"
+  default     = "vmstore"
 }
 
 variable "disk_size" {
-  type        = string
-  description = "Size of the root disk"
-  default     = "8G"
+  type        = number
+  description = "Disk size in GB"
+  default     = 10
 }
 
-variable "disk_storage" {
+variable "network_bridge" {
   type        = string
-  description = "Storage pool for the root disk"
-  default     = "local-lvm"
+  description = "Network bridge to use"
+  default     = "vmbr0"
 }
 
-variable "ip_address" {
+variable "ipv4_address" {
   type        = string
-  description = "IPv4 address in CIDR notation (e.g., '192.168.1.100/24')"
+  description = "IPv4 address (use 'dhcp' for DHCP)"
+  default     = "dhcp"
 }
 
-variable "onboot" {
+variable "started" {
   type        = bool
-  description = "Start container on boot"
+  description = "Whether the container should be started"
   default     = true
 }
 
-variable "unprivileged" {
-  type        = bool
-  description = "Create an unprivileged container"
-  default     = false
+variable "ssh_key" {
+  type        = list(string)
+  description = "The SSH keys for the root account"
+  default     = []
 }
-
-variable "pm_api_url" {
-  type    = string
-  default = "192.168.1.20"
-}
-
-variable "cloud_init_script" {
-  type        = string
-  description = "Cloud-init script to run on first boot"
-  default     = ""
-}
-
