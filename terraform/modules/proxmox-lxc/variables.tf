@@ -67,3 +67,9 @@ variable "started" {
   description = "Whether the container should be started"
   default     = true
 }
+
+variable "ssh_key" {
+  type        = list(string)
+  description = "The SSH keys for the root account"
+  default     = []
+}

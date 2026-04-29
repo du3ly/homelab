@@ -10,7 +10,11 @@ resource "proxmox_virtual_environment_container" "lxc" {
   vm_id     = var.vm_id
 
   initialization {
-    hostname  = var.hostname
+    hostname = var.hostname
+
+    user_account {
+      keys = var.ssh_key
+    }
 
     ip_config {
       ipv4 {
@@ -21,6 +25,7 @@ resource "proxmox_virtual_environment_container" "lxc" {
 
   operating_system {
     template_file_id = proxmox_virtual_environment_download_file.template.id
+    type             = "debian"
   }
 
   cpu {
