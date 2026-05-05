@@ -1,0 +1,22 @@
+# Docker Compose file to run Garage on Synology DSM Container Manager
+#
+# Requires manual configuration (https://garagehq.deuxfleurs.fr/documentation/quick-start/#manual-configuration)
+# Enable SSH on Synology DSM to run the garage cli from the container
+
+services:
+  garage:
+    image: dxflrs/garage:b6b18427a5fc9b5b7540cf6d0843afd5cf7f9b56
+    container_name: garage
+    environment:
+      - RUST_LOG=garage=info
+    ports:
+      - '3900:3900'  # s3 api
+    #  - '3901:3901'  # rpc bind
+      - '3902:3902'  # s3 web
+    #  - '3903:3903'  # admin
+    restart: unless-stopped
+    stop_grace_period: 2m
+    volumes:
+      - /volume1/docker/garage/garage.toml:/etc/garage.toml
+      - /volume1/docker/garage/meta:/var/lib/garage/meta
+      - /volume1/docker/garage/data:/var/lib/garage/data
