@@ -1,0 +1,13 @@
+# Caddyfile for Synology Reverse Proxy
+
+nas.internal {
+    reverse_proxy 192.168.1.21:5000
+}
+
+plex.internal {
+    reverse_proxy 192.168.1.21:32400
+}
+
+photos.internal {
+    reverse_proxy 192.168.1.21:8081
+}
