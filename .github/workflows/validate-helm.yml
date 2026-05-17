@@ -1,73 +1,12 @@
-name: Validate IaC
+name: Validate Helm
 
 on:
   pull_request:
     paths:
-      - 'terraform/**'
-      - 'ansible/**'
       - 'helm/**'
       - '.github/workflows/**'
 
 jobs:
-  validate-terraform:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.6.0
-
-      - name: Find Terraform directories
-        id: tf-dirs
-        run: |
-          DIRS=$(find terraform -name "*.tf" -exec dirname {} \; | sort -u | tr '\n' ',')
-          echo "dirs=${DIRS%,}" >> $GITHUB_OUTPUT
-
-      - name: Run Terraform validation
-        working-directory: ${{ github.workspace }}
-        run: |
-          for dir in $(echo "${{ steps.tf-dirs.outputs.dirs }}" | tr ',' ' '); do
-            if [ -n "$dir" ]; then
-              echo "Validating Terraform in: $dir"
-              cd "$dir"
-              terraform init -backend=false -input=false
-              terraform validate
-              terraform fmt -check -recursive
-              cd - > /dev/null
-            fi
-          done
-
-  validate-ansible:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Ansible
-        run: |
-          pip install ansible ansible-lint
-
-      - name: Find Ansible playbooks
-        id: playbooks
-        run: |
-          PLAYBOOKS=$(find ansible -name "*.yml" -path "*/playbooks/*" | sort | tr '\n' ',')
-          echo "playbooks=${PLAYBOOKS%,}" >> $GITHUB_OUTPUT
-
-      - name: Run Ansible syntax check
-        run: |
-          for playbook in $(echo "${{ steps.playbooks.outputs.playbooks }}" | tr ',' ' '); do
-            if [ -n "$playbook" ]; then
-              echo "Checking syntax: $playbook"
-              ansible-playbook --syntax-check "$playbook"
-            fi
-          done
-
   validate-helm:
     runs-on: ubuntu-latest
     steps:

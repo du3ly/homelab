@@ -1,0 +1,37 @@
+name: Validate Ansible
+
+on:
+  pull_request:
+    paths:
+      - 'ansible/**'
+      - '.github/workflows/**'
+
+jobs:
+  validate-ansible:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Ansible
+        run: |
+          pip install ansible ansible-lint
+
+      - name: Find Ansible playbooks
+        id: playbooks
+        run: |
+          PLAYBOOKS=$(find ansible -name "*.yml" -path "*/playbooks/*" | sort | tr '\n' ',')
+          echo "playbooks=${PLAYBOOKS%,}" >> $GITHUB_OUTPUT
+
+      - name: Run Ansible syntax check
+        run: |
+          for playbook in $(echo "${{ steps.playbooks.outputs.playbooks }}" | tr ',' ' '); do
+            if [ -n "$playbook" ]; then
+              echo "Checking syntax: $playbook"
+              ansible-playbook --syntax-check "$playbook"
+            fi
+          done
