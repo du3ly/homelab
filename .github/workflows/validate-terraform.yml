@@ -1,0 +1,38 @@
+name: Validate Terraform
+
+on:
+  pull_request:
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/**'
+
+jobs:
+  validate-terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Find Terraform directories
+        id: tf-dirs
+        run: |
+          DIRS=$(find terraform -name "*.tf" -exec dirname {} \; | sort -u | tr '\n' ',')
+          echo "dirs=${DIRS%,}" >> $GITHUB_OUTPUT
+
+      - name: Run Terraform validation
+        working-directory: ${{ github.workspace }}
+        run: |
+          for dir in $(echo "${{ steps.tf-dirs.outputs.dirs }}" | tr ',' ' '); do
+            if [ -n "$dir" ]; then
+              echo "Validating Terraform in: $dir"
+              cd "$dir"
+              terraform init -backend=false -input=false
+              terraform validate
+              terraform fmt -check -recursive
+              cd - > /dev/null
+            fi
+          done
