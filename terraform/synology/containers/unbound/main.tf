@@ -6,7 +6,7 @@ module "unbound" {
 
   services = {
     unbound = {
-      image   = "alpinelinux/unbound:latest-x86_64@sha256:d6e9d37a2887f8eed630073977334c08d90f177996877078a410106c5335bf90"
+      image   = "alpinelinux/unbound:latest"
       restart = "unless-stopped"
 
       ports = [
