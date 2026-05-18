@@ -11,19 +11,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required to access base branch for diff
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.0
 
-      - name: Find Terraform directories
+      - name: Find modified Terraform directories
         id: tf-dirs
         run: |
-          DIRS=$(find terraform -name "*.tf" -exec dirname {} \; | sort -u | tr '\n' ',')
+          DIRS=$(git diff --name-only origin/${{ github.base_ref }}...HEAD \
+            | grep '\.tf$' \
+            | xargs -I{} dirname {} \
+            | sort -u \
+            | tr '\n' ',')
           echo "dirs=${DIRS%,}" >> $GITHUB_OUTPUT
 
       - name: Run Terraform validation
+        if: steps.tf-dirs.outputs.dirs != ''
         working-directory: ${{ github.workspace }}
         run: |
           for dir in $(echo "${{ steps.tf-dirs.outputs.dirs }}" | tr ',' ' '); do
