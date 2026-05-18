@@ -31,15 +31,52 @@ jobs:
 
       - name: Run Terraform validation
         if: steps.tf-dirs.outputs.dirs != ''
-        working-directory: ${{ github.workspace }}
+        id: validate
         run: |
+          OUTPUT=""
+          FAILED=0
           for dir in $(echo "${{ steps.tf-dirs.outputs.dirs }}" | tr ',' ' '); do
             if [ -n "$dir" ]; then
               echo "Validating Terraform in: $dir"
               cd "$dir"
-              terraform init -backend=false -input=false
-              terraform validate
-              terraform fmt -check -recursive
+
+              # Init: suppress output unless it fails
+              INIT_OUTPUT=$(terraform init -backend=false -input=false -no-color 2>&1)
+              INIT_EXIT=$?
+
+              if [ $INIT_EXIT -ne 0 ]; then
+                OUTPUT="${OUTPUT}\n### ❌ \`${dir}\` (init failed)\n\`\`\`\n${INIT_OUTPUT}\n\`\`\`\n"
+                FAILED=1
+                cd - > /dev/null
+                continue
+              fi
+
+              # Validate
+              VALIDATE_OUTPUT=$(terraform validate -no-color 2>&1)
+              VALIDATE_EXIT=$?
+
+              # Fmt: collect unformatted files
+              FMT_OUTPUT=$(terraform fmt -check -recursive -no-color 2>&1)
+              FMT_EXIT=$?
+
+              if [ $VALIDATE_EXIT -eq 0 ] && [ $FMT_EXIT -eq 0 ]; then
+                OUTPUT="${OUTPUT}\n### ✅ \`${dir}\`\n"
+              else
+                FAILED=1
+                DIR_DETAIL=""
+                if [ $VALIDATE_EXIT -ne 0 ]; then
+                  DIR_DETAIL="${DIR_DETAIL}\n**Validate failed:**\n\`\`\`\n${VALIDATE_OUTPUT}\n\`\`\`"
+                fi
+                if [ $FMT_EXIT -ne 0 ]; then
+                  DIR_DETAIL="${DIR_DETAIL}\n**Formatting required on:**\n\`\`\`\n${FMT_OUTPUT}\n\`\`\`\n> Run \`terraform fmt -recursive\` to fix."
+                fi
+                OUTPUT="${OUTPUT}\n### ❌ \`${dir}\`\n${DIR_DETAIL}\n"
+              fi
+
               cd - > /dev/null
             fi
           done
+          echo "output<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          exit $FAILED
