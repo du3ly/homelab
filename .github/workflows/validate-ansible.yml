@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required to access base branch for diff
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -21,13 +23,18 @@ jobs:
         run: |
           pip install ansible ansible-lint
 
-      - name: Find Ansible playbooks
+      - name: Find modified Ansible playbooks
         id: playbooks
         run: |
-          PLAYBOOKS=$(find ansible -name "*.yml" -path "*/playbooks/*" | sort | tr '\n' ',')
+          PLAYBOOKS=$(git diff --name-only origin/${{ github.base_ref }}...HEAD \
+            | grep '\.yml$' \
+            | grep '.*/playbooks/.*' \
+            | sort -u \
+            | tr '\n' ',')
           echo "playbooks=${PLAYBOOKS%,}" >> $GITHUB_OUTPUT
 
       - name: Run Ansible syntax check
+        if: steps.playbooks.outputs.playbooks != ''
         run: |
           for playbook in $(echo "${{ steps.playbooks.outputs.playbooks }}" | tr ',' ' '); do
             if [ -n "$playbook" ]; then
