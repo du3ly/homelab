@@ -2,8 +2,8 @@
 
 Information about the Proxmox provider and the commands to create the users and role can be found in the terraform.io webpage.
 
-https://registry.terraform.io/providers/Telmate/proxmox/latest/docs
-https://github.com/Telmate/terraform-provider-proxmox
+https://registry.terraform.io/providers/bpg/proxmox/latest/docs
+https://github.com/bpg/terraform-provider-proxmox
 
 Commands
 
