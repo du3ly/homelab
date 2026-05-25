@@ -11,14 +11,14 @@ module "unbound" {
 
       ports = [
         {
-        target    = 53
-        protocol  = "tcp"
-        published = "53"
+          target    = 53
+          protocol  = "tcp"
+          published = "53"
         },
         {
-        target    = 53
-        protocol  = "udp"
-        published = "53"
+          target    = 53
+          protocol  = "udp"
+          published = "53"
         }
       ]
 
