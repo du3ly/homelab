@@ -10,10 +10,11 @@ variable "run" {
 variable "services" {
   type = map(object({
     image       = string
-    ports       = optional(list(object({ target = number, protocol = string, published = string })))
+    restart     = optional(string)
+    ports       = optional(list(object({ target = number, protocol = optional(string), published = string })))
     environment = optional(map(string))
     volumes     = optional(list(object({ type = string, source = string, target = string })))
-    configs     = optional(list(object({ source = string, target = string })))
+    configs     = optional(list(object({ source = string, target = string, mode = optional(string) })))
   }))
 }
 

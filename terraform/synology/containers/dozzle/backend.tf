@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     endpoint = "http://192.168.1.21:3900"
     bucket   = "terraform-state"
-    key      = "synology/containers/registry/terraform.tfstate"
+    key      = "synology/containers/dozzle/terraform.tfstate"
     region   = "us-east-1"
 
     skip_credentials_validation = true
