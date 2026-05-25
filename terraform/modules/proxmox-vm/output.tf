@@ -1,16 +1,16 @@
 output "id" {
   description = "The resource ID returned by the provider"
-  value       = proxmox_vm_qemu.this.id
+  value       = proxmox_virtual_environment_vm.this.id
 }
 
 output "vmid" {
   description = "The VMID assigned to the virtual machine by Proxmox"
-  value       = proxmox_vm_qemu.this.vmid
+  value       = proxmox_virtual_environment_vm.this.vm_id
 }
 
 output "name" {
   description = "The name of the virtual machine"
-  value       = proxmox_vm_qemu.this.name
+  value       = proxmox_virtual_environment_vm.this.name
 }
 
 output "node" {

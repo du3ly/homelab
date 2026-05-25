@@ -1,5 +1,13 @@
 terraform {
-  backend "pg" {
-    schema_name = "tf_proxmox_001_k3s_001"
+  backend "s3" {
+    endpoint = "http://192.168.1.21:3900"
+    bucket   = "terraform-state"
+    key      = "proxmox/proxmox-001/k3s-001/terraform.tfstate"
+    region   = "us-east-1"
+
+    skip_credentials_validation = true
+    skip_metadata_api_check     = true
+    skip_requesting_account_id  = true
+    force_path_style            = true
   }
 }

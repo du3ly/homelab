@@ -47,7 +47,7 @@ variable "vm_clone_template" {
 }
 
 variable "full_clone" {
-  type    = string
+  type    = bool
   default = true
 }
 
