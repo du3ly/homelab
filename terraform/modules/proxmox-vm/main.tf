@@ -11,6 +11,8 @@ resource "proxmox_virtual_environment_vm" "this" {
   description = var.vm_desc
   node_name   = var.target_node
 
+  boot_order = ["scsi0"]
+
   agent {
     enabled = true
   }
