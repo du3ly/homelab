@@ -13,6 +13,8 @@ apt-get install -yq \
   wget \
   ca-certificates
 
-python3 -m venv /tmp/ansible-venv
-source /tmp/ansible-venv/bin/activate
-pip3 install -qUr /tmp/requirements.txt --no-cache-dir
+python3 -m venv /opt/ansible-venv
+/opt/ansible-venv/bin/pip install -qUr /tmp/requirements.txt --no-cache-dir
+
+
+
