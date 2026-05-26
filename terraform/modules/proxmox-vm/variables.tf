@@ -55,3 +55,15 @@ variable "disk_backup" {
   type    = bool
   default = true
 }
+
+variable "user_data" {
+  type        = string
+  description = "The cloud-init user data"
+  default     = null
+}
+
+variable "snippet_storage" {
+  type        = string
+  description = "The name of the storage pool on which to store the cloud-init snippets"
+  default     = "local"
+}
