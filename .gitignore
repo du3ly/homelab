@@ -1,3 +1,5 @@
-ansible/roles-galaxy
+.antigravitycli/
 .terraform/
+.worktrees/
+ansible/roles-galaxy
 secrets
