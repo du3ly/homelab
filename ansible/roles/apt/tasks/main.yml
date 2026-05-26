@@ -9,3 +9,4 @@
       - net-tools
       - sudo
       - curl
+      - cloud-init

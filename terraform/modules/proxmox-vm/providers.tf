@@ -10,4 +10,9 @@ terraform {
 provider "proxmox" {
   endpoint = "https://${var.pm_api_url}:8006/"
   insecure = true
+
+  ssh {
+    agent    = true
+    username = "root"
+  }
 }
