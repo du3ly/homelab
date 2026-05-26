@@ -1,7 +1,7 @@
 locals {
-  debian_version = "12.13.0"
-  debian_iso_checksum = "2b880ffabe36dbe04a662a3125e5ecae4db69d0acce257dd74615bbf165ad76e"
-  vm_id = 201
+  debian_version = "13.4.0"
+  debian_iso_checksum = "0b813535dd76f2ea96eff908c65e8521512c92a0631fd41c95756ffd7d4896dc"
+  vm_id = 202
 }
 
 source "proxmox-iso" "debian" {
@@ -65,7 +65,7 @@ build {
   }
 
   provisioner "ansible-local" {
-    command = "source /tmp/ansible-venv/bin/activate && ANSIBLE_FORCE_COLOR=1 PYTHONBUFFERED=1 ansible-playbook"
+    command = "source /opt/ansible-venv/bin/activate && ANSIBLE_FORCE_COLOR=1 PYTHONBUFFERED=1 ansible-playbook"
     extra_arguments = [
       "-e", "ansible_python_interpreter=/usr/bin/python3",
       "-t", "operators"

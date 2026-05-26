@@ -11,6 +11,10 @@ rm -rf /dev/.udev /var/lib/dhcp3/* /var/lib/dhcp/*
 rm -rf *.iso
 rm -rf /var/tmp/* /tmp/*
 rm -rf /var/lib/cloud/instances/*
+rm -rf /opt/ansible-venv
+
+
+
 rm -f /var/lib/cloud/instance
 
 for user in root; do rm -rf /home/$user/{.viminfo,.bash_history,.ssh} ; done
