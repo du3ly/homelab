@@ -4,7 +4,3 @@ operators:
     comment: duely
     ssh_keys:
       - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCp3zgT/IZBUDgTlGm83q1P0UHCsK9yGKqnrf7h1QtluHo2SRD2JWafOK9wSjxl/GQxpNyL23p19GW8CcrEXMnPq48kLSMeUmJGKUWDZkGUK2UF58kNKk8+kJ8W+RthFBgASbJLZADQs7ih820u+9JB2yZiTQ8t4O0JW1vO5ArRs96JPqumpH64fUc+zp5eLBIj0+Qmck78gqaZ8ZEtu568ZJOHeoMEPRMyattTP7+DjMRlkKaOy9kaQomyYdt/G4xnYlC89t+xO/lLrqMno64+ihdfjy7UeLwse+mvW4V0+Qx6KybCUWyvpo6rAspZmEoG3fxGvh51pnZeJRibygYwcfPphvRbQGNrzWEPuWWtQLb+bGRa58jqFUTf+9a5OQTr2EfpDRRXdc2zS3Io3A7+OmaRnfQ1pYw7xjqeJuYoLX958Wn5r3r7927z4a/ZV+j5XgdAL6Z8iB9vt3jL9YIklcKcIV0ZnlxqkXkyUCPDZhcwn1qrgu4tLokH1+5FghoBjz0XTu2RGRWDoJ9FQaBtdc+1ZTuyqd82jkW+QTuU1f5mBliA0vTcMZMGaySe/ivtUzaECzmEvWUzu0dA71y/dszMCBYg5ZV0k99G/AGOgH0jwg3NSq6auqxlok2soeaPbipSWtcbUX5QkULO9CpHGOVnpNng9Lg/2aaEMPy26w=='
-  - name: ansible
-    comment: ansible
-    ssh_keys:
-      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHBFGXcVb+nOAYTOtUT2rcSinKXIirlj/1IMmxxCOtdf'

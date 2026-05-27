@@ -68,7 +68,7 @@ build {
     command = "source /opt/ansible-venv/bin/activate && ANSIBLE_FORCE_COLOR=1 PYTHONBUFFERED=1 ansible-playbook"
     extra_arguments = [
       "-e", "ansible_python_interpreter=/usr/bin/python3",
-      "-t", "operators"
+      "-t", "operators,apt"
     ]
     inventory_groups = ["all"]
     playbook_dir  = "../ansible"

@@ -2,7 +2,7 @@
 - hosts: all
   become: yes
   roles:
-    - apt
-    - dns
-    - motd
+    - {role: apt, tags: apt}
+    - {role: dns, tags: dns}
+    - {role: motd, tags: motd}
     - {role: operators, tags: operators}
