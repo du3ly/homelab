@@ -10,6 +10,7 @@ spec:
   description: System-level ArgoCD management
   sourceRepos:
     - 'https://github.com/du3ly/homelab.git'
+    - 'https://argoproj.github.io/argo-helm'
   destinations:
     - server: 'https://kubernetes.default.svc'
       namespace: argocd
