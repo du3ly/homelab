@@ -16,7 +16,8 @@ spec:
       values: |
         server:
           service:
-            type: LoadBalancer
+            type: NodePort
+            nodePortHttps: 30443
         redis:
           serviceAccount:
             create: true
