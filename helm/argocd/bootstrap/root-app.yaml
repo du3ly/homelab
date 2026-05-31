@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: 'https://github.com/du3ly/homelab.git'
     targetRevision: main
-    path: argocd/applications
+    path: helm/argocd/applications
     directory:
       recurse: true
   destination:
