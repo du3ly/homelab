@@ -21,6 +21,8 @@ spec:
         redis:
           serviceAccount:
             create: true
+          secretInit:
+            enabled: false
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: argocd
