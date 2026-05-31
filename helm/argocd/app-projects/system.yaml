@@ -1,0 +1,20 @@
+# argocd/app-projects/system.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: system
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"   # create before Applications
+spec:
+  description: System-level ArgoCD management
+  sourceRepos:
+    - 'https://github.com/du3ly/homelab.git'
+  destinations:
+    - server: 'https://kubernetes.default.svc'
+      namespace: argocd
+    - server: 'https://kubernetes.default.svc'
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'        # system project needs cluster-wide access
