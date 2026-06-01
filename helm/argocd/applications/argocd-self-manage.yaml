@@ -14,15 +14,79 @@ spec:
     targetRevision: '7.8.0'
     helm:
       values: |
+        # Disable unused components to save memory and reduce pods
+        dex:
+          enabled: false
+        notifications:
+          enabled: false
+        applicationSet:
+          enabled: false
+
+        # Configure resource limits and requests for remaining components
+        controller:
+          env:
+            - name: GOGC
+              value: "50"
+            - name: GOMEMLIMIT
+              value: "250Mi"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 150Mi
+            limits:
+              cpu: 500m
+              memory: 300Mi
+
+        repoServer:
+          env:
+            - name: GOGC
+              value: "50"
+            - name: GOMEMLIMIT
+              value: "100Mi"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 100Mi
+            limits:
+              cpu: 500m
+              memory: 200Mi
+
         server:
           service:
             type: NodePort
             nodePortHttps: 30443
+          env:
+            - name: GOGC
+              value: "50"
+            - name: GOMEMLIMIT
+              value: "80Mi"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+
         redis:
           serviceAccount:
             create: true
           secretInit:
             enabled: false
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+
+        # Tune command-line parameters for lower memory concurrency
+        configs:
+          params:
+            controller.status.processors: "5"
+            controller.operation.processors: "3"
+            reposerver.parallelism.limit: "2"
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: argocd
