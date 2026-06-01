@@ -71,8 +71,6 @@ spec:
         redis:
           serviceAccount:
             create: true
-          secretInit:
-            enabled: false
           resources:
             requests:
               cpu: 10m
@@ -80,6 +78,9 @@ spec:
             limits:
               cpu: 100m
               memory: 64Mi
+
+        redisSecretInit:
+          enabled: false
 
         # Tune command-line parameters for lower memory concurrency
         configs:
