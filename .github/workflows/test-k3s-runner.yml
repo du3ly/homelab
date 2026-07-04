@@ -1,0 +1,25 @@
+name: Test K3s Runner
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/test-k3s-runner.yml'
+
+jobs:
+  test-k3s-runner:
+    runs-on: k3s-runner
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Diagnostics
+        run: |
+          echo "Successfully running on your k3s self-hosted runner!"
+          echo "Hostname: $(hostname)"
+          echo "OS/Kernel: $(uname -a)"
+          echo "User: $(whoami)"
+          echo "Docker version (if using dind):"
+          docker version || echo "Docker not available/configured in this mode"
