@@ -11,7 +11,7 @@ spec:
   sourceRepos:
     - 'https://github.com/du3ly/homelab.git'
     - 'https://argoproj.github.io/argo-helm'
-    - 'oci://ghcr.io/actions/actions-runner-controller-charts/*'
+    - 'oci://ghcr.io/actions/actions-runner-controller-charts*'
   destinations:
     - server: 'https://kubernetes.default.svc'
       namespace: argocd
