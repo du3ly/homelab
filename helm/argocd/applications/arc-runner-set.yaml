@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: arc-runner-set
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: system
+  source:
+    repoURL: 'oci://ghcr.io/actions/actions-runner-controller-charts'
+    chart: gha-runner-scale-set
+    targetRevision: 0.14.2
+    helm:
+      values: |
+        githubConfigUrl: "https://github.com/du3ly/homelab"
+        
+        # Must match the name of the secret created in Step 1
+        githubConfigSecret: pre-defined-secret
+
+        # The name of the runner scale set as it will appear in GitHub Actions
+        runnerScaleSetName: "k3s-runner"
+
+        minRunners: 0
+        maxRunners: 5
+
+        containerMode:
+          type: "dind" # Use "kubernetes" if you don't need Docker-in-Docker
+
+        template:
+          spec:
+            containers:
+              - name: runner
+                image: ghcr.io/actions/actions-runner:latest
+                command: ["/home/runner/run.sh"]
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: arc-runners
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
