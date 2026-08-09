@@ -1,0 +1,9 @@
+argocd.home {
+  tls internal
+
+  reverse_proxy https://192.168.1.11:30443 {
+    transport http {
+      tls_insecure_skip_verify
+    }
+  }
+}

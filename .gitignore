@@ -4,3 +4,4 @@
 ansible/roles-galaxy
 secrets
 packer/downloaded_iso_path/
+*.tfvars

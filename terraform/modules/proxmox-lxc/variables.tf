@@ -62,6 +62,18 @@ variable "ipv4_address" {
   default     = "dhcp"
 }
 
+variable "ipv4_gateway" {
+  type        = string
+  description = "Default gateway for the container"
+  default     = "192.168.1.1"
+}
+
+variable "dns_servers" {
+  type        = list(string)
+  description = "DNS servers for the container"
+  default     = ["1.1.1.1", "8.8.8.8"]
+}
+
 variable "started" {
   type        = bool
   description = "Whether the container should be started"

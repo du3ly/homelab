@@ -16,9 +16,14 @@ resource "proxmox_virtual_environment_container" "lxc" {
       keys = var.ssh_key
     }
 
+    dns {
+      servers = var.dns_servers
+    }
+
     ip_config {
       ipv4 {
         address = var.ipv4_address
+        gateway = var.ipv4_gateway
       }
     }
   }
