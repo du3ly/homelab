@@ -21,6 +21,12 @@ variable "target_node" {
   default     = "proxmox-001"
 }
 
+variable "boot_order" {
+  type        = list(string)
+  description = "Boot order list (e.g. [\"scsi0\"] or [\"ide2\", \"scsi0\"])"
+  default     = ["scsi0"]
+}
+
 variable "cores" {
   type        = number
   description = "Number of CPU cores"

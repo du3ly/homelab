@@ -8,8 +8,8 @@ resource "proxmox_virtual_environment_vm" "this" {
   bios    = "ovmf"
   machine = "q35"
 
-  # Boot from ISO first, then disk
-  boot_order = ["ide2", "scsi0"]
+  # Boot order
+  boot_order = var.boot_order
 
   agent {
     enabled = false
