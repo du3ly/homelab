@@ -5,3 +5,5 @@ ansible/roles-galaxy
 secrets
 packer/downloaded_iso_path/
 *.tfvars
+talos/**/secrets.yaml
+talos/**/generated/

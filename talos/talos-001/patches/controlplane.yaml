@@ -1,0 +1,6 @@
+## Control Plane Patch for talos-001
+## Single-node cluster: allow workloads on control plane nodes
+## Apply with:
+##   talosctl apply-config --nodes <IP> --file controlplane.yaml --config-patch @talos/talos-001/patches/controlplane.yaml
+cluster:
+  allowSchedulingOnControlPlanes: true
