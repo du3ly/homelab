@@ -6,7 +6,7 @@ module "instance" {
   vm_id   = 400
 
   cores  = 2
-  memory = 2048
+  memory = 8192
 
   iso_file = "metal-amd64.iso"
 }
