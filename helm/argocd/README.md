@@ -56,11 +56,12 @@ argocd admin initial-password -n argocd
 
 ### 3. Access UI & Login
 
-- **UI (NodePort):** `https://<NODE_IP>:30443`
+- **UI (LoadBalancer):** `https://192.168.1.240`
+- **UI (NodePort fallback):** `https://<NODE_IP>:30443`
 - **CLI Login:**
   ```bash
-  argocd login <NODE_IP>:30443
+  argocd login 192.168.1.240
   ```
 
 > [!NOTE]
-> Once MetalLB is running and configured with an IP pool, ArgoCD can be switched to `LoadBalancer` directly in `helm/argocd/applications/argocd-self-manage.yaml`.
+> MetalLB manages the `192.168.1.240-192.168.1.250` IP pool. ArgoCD is configured as `type: LoadBalancer` in `helm/argocd/applications/argocd-self-manage.yaml`.
