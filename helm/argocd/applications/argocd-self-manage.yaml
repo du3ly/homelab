@@ -53,8 +53,7 @@ spec:
 
         server:
           service:
-            type: NodePort
-            nodePortHttps: 30443
+            type: LoadBalancer
           env:
             - name: GOGC
               value: "50"

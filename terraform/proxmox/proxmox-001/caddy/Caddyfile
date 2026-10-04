@@ -1,7 +1,7 @@
 argocd.home.arpa {
   tls internal
 
-  reverse_proxy https://192.168.1.11:30443 {
+  reverse_proxy https://192.168.1.240:443 {
     transport http {
       tls_insecure_skip_verify
     }
