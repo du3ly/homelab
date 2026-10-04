@@ -22,7 +22,7 @@ module "instance" {
   ssh_key = [var.ssh_public_key]
 }
 
-# Copy the Caddyfile to a staging path first (caddy package not yet installed)
+# Initial host provisioning: install Caddy and configure systemd override for LXC
 resource "null_resource" "caddy_init" {
   depends_on = [module.instance]
 
@@ -52,20 +52,34 @@ resource "null_resource" "caddy_init" {
       "mkdir -p /etc/systemd/system/caddy.service.d",
       "printf '[Service]\\nPrivateTmp=no\\nPrivateDevices=no\\nProtectSystem=no\\nProtectHome=no\\nProtectKernelTunables=no\\nProtectKernelModules=no\\nProtectControlGroups=no\\nRestrictNamespaces=no\\nLockPersonality=no\\nMemoryDenyWriteExecute=no\\nRestrictRealtime=no\\n' > /etc/systemd/system/caddy.service.d/override.conf",
       "systemctl daemon-reload",
+      "systemctl enable caddy",
     ]
   }
+}
 
-  # 3. Drop the Caddyfile — package installation creates /etc/caddy/
+# Deploy Caddyfile and reload/restart service when configuration changes
+resource "null_resource" "caddy_config" {
+  depends_on = [null_resource.caddy_init]
+
+  triggers = {
+    caddyfile_hash = filemd5("${path.module}/Caddyfile")
+  }
+
+  connection {
+    type        = "ssh"
+    host        = local.caddy_ip
+    user        = "root"
+    private_key = file(var.ssh_private_key_path)
+  }
+
   provisioner "file" {
     source      = "${path.module}/Caddyfile"
     destination = "/etc/caddy/Caddyfile"
   }
 
-  # 4. Enable on boot and apply config
   provisioner "remote-exec" {
     inline = [
-      "systemctl enable caddy",
-      "systemctl restart caddy",
+      "systemctl reload-or-restart caddy",
     ]
   }
 }
